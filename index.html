@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrusel de Programación HTML</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .carousel-container {
+            max-width: 900px;
+            width: 100%;
+            background: #1a1a1a;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+            border: 3px solid #61dafb;
+        }
+
+        .carousel-header {
+            background: linear-gradient(45deg, #282c34, #1a1a1a);
+            color: #61dafb;
+            text-align: center;
+            padding: 25px;
+            border-bottom: 2px solid #61dafb;
+        }
+
+        .carousel-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .carousel-header p {
+            opacity: 0.9;
+            font-size: 1.2rem;
+            color: #98fb98;
+            font-family: 'Courier New', monospace;
+        }
+
+        .carousel-wrapper {
+            position: relative;
+            overflow: hidden;
+            height: 500px;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.6s ease-in-out;
+            height: 100%;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            position: relative;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .slide-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            color: #61dafb;
+            padding: 40px 25px 25px;
+        }
+
+        .slide-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-family: 'Courier New', monospace;
+        }
+
+        .slide-description {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            color: #98fb98;
+            line-height: 1.4;
+            font-family: 'Courier New', monospace;
+        }
+
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(97, 218, 251, 0.9);
+            border: 2px solid #61dafb;
+            width: 55px;
+            height: 55px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: #000;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(97, 218, 251, 0.3);
+            font-family: 'Courier New', monospace;
+        }
+
+        .carousel-button:hover {
+            background: #61dafb;
+            transform: translateY(-50%) scale(1.15);
+            box-shadow: 0 6px 20px rgba(97, 218, 251, 0.5);
+        }
+
+        .carousel-button:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .prev-button {
+            left: 20px;
+        }
+
+        .next-button {
+            right: 20px;
+        }
+
+        .carousel-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 25px;
+            background: #1a1a1a;
+        }
+
+        .indicator {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            background: #444;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #666;
+        }
+
+        .indicator.active {
+            background: #61dafb;
+            border-color: #61dafb;
+            transform: scale(1.3);
+            box-shadow: 0 0 10px rgba(97, 218, 251, 0.5);
+        }
+
+        .indicator:hover {
+            background: #888;
+            border-color: #aaa;
+        }
+
+        .carousel-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #61dafb;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            z-index: 10;
+            border: 1px solid #61dafb;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .carousel-container {
+                margin: 10px;
+            }
+
+            .carousel-wrapper {
+                height: 350px;
+            }
+
+            .carousel-button {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+
+            .prev-button {
+                left: 15px;
+            }
+
+            .next-button {
+                right: 15px;
+            }
+
+            .carousel-header h1 {
+                font-size: 2rem;
+            }
+
+            .slide-title {
+                font-size: 1.4rem;
+            }
+
+            .slide-description {
+                font-size: 1rem;
+            }
+        }
+
+        /* Animaciones adicionales */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-content {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* Efecto de código parpadeante */
+        @keyframes blink {
+            0%, 50% {
+                opacity: 1;
+            }
+            51%, 100% {
+                opacity: 0.7;
+            }
+        }
+
+        .carousel-header h1::after {
+            content: '_';
+            animation: blink 1s infinite;
+            color: #98fb98;
+        }
+
+        /* Efecto de terminal */
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        .slide-title {
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 1s steps(20, end);
+        }
+    </style>
+</head>
+<body>
+    <div class="carousel-container">
+        <div class="carousel-header">
+            <h1>&lt;/&gt; HTML PROGRAMMING</h1>
+            <p>console.log("Aprende a programar con HTML");</p>
+        </div>
+
+        <div class="carousel-wrapper">
+            <div class="carousel-counter">
+                <span id="current-slide">1</span> / <span id="total-slides">6</span>
+            </div>
+
+            <div class="carousel-track" id="carousel-track">
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=900&h=500&fit=crop&crop=center" alt="Código HTML" crossorigin="anonymous">
+                    <div class="slide-content">
+                        <div class="slide-title">&lt;html&gt; Estructura Básica</div>
+                        <div class="slide-description">HTML es el lenguaje de marcado que define la estructura y contenido de las páginas web</div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=900&h=500&fit=crop&crop=center" alt="Código en pantalla" crossorigin="anonymous">
+                    <div class="slide-content">
+                        <div class="slide-title">&lt;head&gt; Metadatos</div>
+                        <div class="slide-description">La sección head contiene información sobre el documento que no se muestra directamente</div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=900&h=500&fit=crop&crop=center" alt="Programación web" crossorigin="anonymous">
+                    <div class="slide-content">
+                        <div class="slide-title">&lt;body&gt; Contenido Visible</div>
+                        <div class="slide-description">El body contiene todo el contenido visible de la página web para los usuarios</div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=900&h=500&fit=crop&crop=center" alt="Tags HTML" crossorigin="anonymous">
+                    <div class="slide-content">
+                        <div class="slide-title">&lt;div&gt; Elementos de Bloque</div>
+                        <div class="slide-description">Los elementos div son contenedores genéricos que ayudan a estructurar y organizar el contenido</div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=900&h=500&fit=crop&crop=center" alt="CSS y HTML" crossorigin="anonymous">
+                    <div class="slide-content">
+                        <div class="slide-title">&lt;style&gt; CSS Integrado</div>
+                        <div class="slide-description">CSS dentro de HTML permite dar estilo y diseño visual a los elementos de la página</div>
+                    </div>
+                </div>
+                <div class="carousel-slide">
+                    <img src="https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?w=900&h=500&fit=crop&crop=center" alt="JavaScript y HTML" crossorigin="anonymous">
+                    <div class="slide-content">
+                        <div class="slide-title">&lt;script&gt; JavaScript</div>
+                        <div class="slide-description">JavaScript añade interactividad y funcionalidad dinámica a las páginas HTML</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-button prev-button" id="prev-btn" aria-label="Imagen anterior">
+                &#8249;
+            </button>
+            <button class="carousel-button next-button" id="next-btn" aria-label="Siguiente imagen">
+                &#8250;
+            </button>
+        </div>
+
+        <div class="carousel-indicators" id="indicators">
+            <!-- Los indicadores se generarán dinámicamente con JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const totalSlides = slides.length;
+        const track = document.getElementById('carousel-track');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const currentSlideSpan = document.getElementById('current-slide');
+        const totalSlidesSpan = document.getElementById('total-slides');
+        const indicatorsContainer = document.getElementById('indicators');
+
+        // Inicialización
+        function init() {
+            // Actualizar contador total
+            totalSlidesSpan.textContent = totalSlides;
+            
+            // Crear indicadores
+            createIndicators();
+            
+            // Actualizar vista inicial
+            updateCarousel();
+            
+            // Event listeners para botones
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+            
+            // Event listeners para teclado
+            document.addEventListener('keydown', handleKeyboard);
+            
+            // Auto-play activado
+            startAutoPlay();
+            
+            // Pausar auto-play cuando el usuario pasa el mouse sobre el carrusel
+            const carouselContainer = document.querySelector('.carousel-container');
+            carouselContainer.addEventListener('mouseenter', stopAutoPlay);
+            carouselContainer.addEventListener('mouseleave', startAutoPlay);
+            
+            // Mensaje de bienvenida en consola
+            console.log('%c🚀 Carrusel de Programación HTML iniciado', 'color: #61dafb; font-size: 16px; font-weight: bold;');
+            console.log('%c<html>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c  <head>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c    <title>Aprendiendo HTML</title>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c  </head>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c  <body>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c    <!-- Tu contenido aquí -->', 'color: #888; font-family: monospace;');
+            console.log('%c  </body>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c</html>', 'color: #98fb98; font-family: monospace;');
+        }
+
+        // Crear indicadores dinámicamente
+        function createIndicators() {
+            for (let i = 0; i < totalSlides; i++) {
+                const indicator = document.createElement('button');
+                indicator.classList.add('indicator');
+                indicator.setAttribute('aria-label', `Ir a slide ${i + 1}`);
+                indicator.addEventListener('click', () => goToSlide(i));
+                indicatorsContainer.appendChild(indicator);
+            }
+        }
+
+        // Actualizar carrusel
+        function updateCarousel() {
+            // Mover el track
+            const translateX = -currentSlide * 100;
+            track.style.transform = `translateX(${translateX}%)`;
+            
+            // Actualizar contador
+            currentSlideSpan.textContent = currentSlide + 1;
+            
+            // Actualizar indicadores
+            updateIndicators();
+            
+            // Log en consola estilo programación
+            const htmlTags = ['<html>', '<head>', '<body>', '<div>', '<style>', '<script>'];
+            console.log(`%c${htmlTags[currentSlide]} Slide ${currentSlide + 1} cargado`, 'color: #61dafb; font-family: monospace;');
+        }
+
+        // Actualizar indicadores
+        function updateIndicators() {
+            const indicators = document.querySelectorAll('.indicator');
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        // Ir a slide anterior
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+            } else {
+                // Ir al último slide (comportamiento circular)
+                currentSlide = totalSlides - 1;
+            }
+            updateCarousel();
+        }
+
+        // Ir a siguiente slide
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                currentSlide++;
+            } else {
+                // Ir al primer slide (comportamiento circular)
+                currentSlide = 0;
+            }
+            updateCarousel();
+        }
+
+        // Ir a slide específico
+        function goToSlide(slideIndex) {
+            if (slideIndex >= 0 && slideIndex < totalSlides) {
+                currentSlide = slideIndex;
+                updateCarousel();
+            }
+        }
+
+        // Manejo de teclado
+        function handleKeyboard(event) {
+            switch(event.key) {
+                case 'ArrowLeft':
+                    event.preventDefault();
+                    prevSlide();
+                    console.log('%c← Navegando hacia atrás', 'color: #98fb98; font-family: monospace;');
+                    break;
+                case 'ArrowRight':
+                    event.preventDefault();
+                    nextSlide();
+                    console.log('%c→ Navegando hacia adelante', 'color: #98fb98; font-family: monospace;');
+                    break;
+                case 'Home':
+                    event.preventDefault();
+                    goToSlide(0);
+                    console.log('%c🏠 Volviendo al inicio', 'color: #61dafb; font-family: monospace;');
+                    break;
+                case 'End':
+                    event.preventDefault();
+                    goToSlide(totalSlides - 1);
+                    console.log('%c🔚 Yendo al final', 'color: #61dafb; font-family: monospace;');
+                    break;
+                case ' ': // Barra espaciadora para pausar/reanudar
+                    event.preventDefault();
+                    toggleAutoPlay();
+                    break;
+            }
+        }
+
+        // Auto-play
+        let autoPlayInterval;
+        let isAutoPlaying = false;
+        
+        function startAutoPlay() {
+            if (!isAutoPlaying) {
+                autoPlayInterval = setInterval(() => {
+                    nextSlide();
+                }, 4000); // Cambiar cada 4 segundos
+                isAutoPlaying = true;
+                console.log('%c▶️ Auto-play iniciado', 'color: #98fb98; font-family: monospace;');
+            }
+        }
+
+        function stopAutoPlay() {
+            if (autoPlayInterval) {
+                clearInterval(autoPlayInterval);
+                isAutoPlaying = false;
+                console.log('%c⏸️ Auto-play pausado', 'color: #ffa500; font-family: monospace;');
+            }
+        }
+
+        function toggleAutoPlay() {
+            if (isAutoPlaying) {
+                stopAutoPlay();
+            } else {
+                startAutoPlay();
+            }
+        }
+
+        // Pausar auto-play cuando el usuario interactúa
+        function pauseAutoPlayOnInteraction() {
+            stopAutoPlay();
+            // Reiniciar después de 6 segundos de inactividad
+            setTimeout(() => {
+                if (!document.querySelector('.carousel-container:hover')) {
+                    startAutoPlay();
+                }
+            }, 6000);
+        }
+
+        // Event listeners para pausar auto-play
+        prevBtn.addEventListener('click', pauseAutoPlayOnInteraction);
+        nextBtn.addEventListener('click', pauseAutoPlayOnInteraction);
+
+        // Soporte para gestos táctiles
+        let startX = 0;
+        let endX = 0;
+
+        track.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            stopAutoPlay();
+        });
+
+        track.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = startX - endX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe izquierda - siguiente imagen
+                    nextSlide();
+                    console.log('%c👆 Swipe detectado: siguiente', 'color: #61dafb; font-family: monospace;');
+                } else {
+                    // Swipe derecha - imagen anterior
+                    prevSlide();
+                    console.log('%c👆 Swipe detectado: anterior', 'color: #61dafb; font-family: monospace;');
+                }
+                pauseAutoPlayOnInteraction();
+            }
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Funciones de utilidad para mostrar código HTML en consola
+        function showHTMLStructure() {
+            console.group('%c📚 Estructura HTML Básica', 'color: #61dafb; font-size: 14px; font-weight: bold;');
+            console.log('%c<!DOCTYPE html>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c<html lang="es">', 'color: #98fb98; font-family: monospace;');
+            console.log('%c<head>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c  <meta charset="UTF-8">', 'color: #98fb98; font-family: monospace;');
+            console.log('%c  <title>Mi Página</title>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c</head>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c<body>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c  <h1>¡Hola Mundo!</h1>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c</body>', 'color: #98fb98; font-family: monospace;');
+            console.log('%c</html>', 'color: #98fb98; font-family: monospace;');
+            console.groupEnd();
+        }
+
+        // Mostrar estructura HTML después de 2 segundos
+        setTimeout(showHTMLStructure, 2000);
+    </script>
+</body>
+</html>
